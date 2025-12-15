@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Maven version - always 4.0.0 -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        PROJECT COORDINATES - Unique identifier for your project
+        groupId: Usually your company/personal domain reversed
+        artifactId: Project name
+        version: Current version (SNAPSHOT = in development)
+    -->
+    <groupId>com.docgen</groupId>
+    <artifactId>ai-doc-generator</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <!-- Human-readable project info -->
+    <name>AI Documentation Generator</name>
+    <description>Automatically generates technical documentation from code</description>
+
+    <!--
+        PROPERTIES - Variables we can reuse
+        Keeps all versions in one place for easy updates
+    -->
+    <properties>
+        <!-- Java version we're using -->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+        <!-- File encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!--
+        DEPENDENCIES - External libraries we'll use
+        Day 1: No external dependencies yet
+        We'll add more as we progress through the week
+    -->
+    <dependencies>
+        <!-- We'll add JavaParser, JGit, NLP libraries later -->
+    </dependencies>
+
+    <!-- BUILD CONFIGURATION -->
+    <build>
+        <plugins>
+            <!-- Compiler plugin - tells Maven how to compile -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+
+            <!--
+                Exec plugin - lets us run our app with: mvn exec:java
+                This makes testing easier
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.docgen.Main</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
