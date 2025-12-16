@@ -4,50 +4,57 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <!-- Maven version - always 4.0.0 -->
     <modelVersion>4.0.0</modelVersion>
 
-    <!--
-        PROJECT COORDINATES - Unique identifier for your project
-        groupId: Usually your company/personal domain reversed
-        artifactId: Project name
-        version: Current version (SNAPSHOT = in development)
-    -->
     <groupId>com.docgen</groupId>
     <artifactId>ai-doc-generator</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <!-- Human-readable project info -->
     <name>AI Documentation Generator</name>
     <description>Automatically generates technical documentation from code</description>
 
-    <!--
-        PROPERTIES - Variables we can reuse
-        Keeps all versions in one place for easy updates
-    -->
     <properties>
-        <!-- Java version we're using -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-
-        <!-- File encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Dependency versions - keep them in one place -->
+        <javaparser.version>3.25.5</javaparser.version>
     </properties>
 
-    <!--
-        DEPENDENCIES - External libraries we'll use
-        Day 1: No external dependencies yet
-        We'll add more as we progress through the week
-    -->
     <dependencies>
-        <!-- We'll add JavaParser, JGit, NLP libraries later -->
+        <!--
+            ╔═══════════════════════════════════════════════════════════╗
+            ║  JAVAPARSER - The heart of Day 2!                         ║
+            ║                                                           ║
+            ║  What it does:                                            ║
+            ║  - Reads Java source code                                 ║
+            ║  - Converts it to an Abstract Syntax Tree (AST)           ║
+            ║  - Lets us extract classes, methods, fields, etc.         ║
+            ║                                                           ║
+            ║  Website: https://javaparser.org/                         ║
+            ╚═══════════════════════════════════════════════════════════╝
+        -->
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-core</artifactId>
+            <version>${javaparser.version}</version>
+        </dependency>
+
+        <!--
+            JavaParser Symbol Solver (optional but useful)
+            Helps resolve type references like "String" → "java.lang.String"
+        -->
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-symbol-solver-core</artifactId>
+            <version>${javaparser.version}</version>
+        </dependency>
     </dependencies>
 
-    <!-- BUILD CONFIGURATION -->
     <build>
         <plugins>
-            <!-- Compiler plugin - tells Maven how to compile -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -58,10 +65,6 @@
                 </configuration>
             </plugin>
 
-            <!--
-                Exec plugin - lets us run our app with: mvn exec:java
-                This makes testing easier
-            -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>

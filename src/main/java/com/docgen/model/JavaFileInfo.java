@@ -2,9 +2,13 @@ package com.docgen.model;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JavaFileInfo - Holds all information about a single Java source file.
+ *
+ * DAY 2 UPDATE: Now includes parsed structure (classes, imports)
  *
  * Think of this as a "container" or "box" that stores:
  * - Where the file is located
@@ -59,6 +63,31 @@ public class JavaFileInfo {
      */
     private LocalDateTime lastModified;
 
+    // ==================== DAY 2: PARSED STRUCTURE ====================
+    // These fields store the result of parsing with JavaParser
+
+    /**
+     * Import statements in this file
+     * Example: ["java.util.List", "java.io.IOException"]
+     */
+    private List<String> imports;
+
+    /**
+     * All classes defined in this file
+     * Usually one main class, but can have inner classes
+     */
+    private List<ClassInfo> classes;
+
+    /**
+     * Whether this file has been successfully parsed
+     */
+    private boolean parsed;
+
+    /**
+     * Error message if parsing failed
+     */
+    private String parseError;
+
 
     // ==================== CONSTRUCTOR ====================
     // This runs when you create a new JavaFileInfo object
@@ -79,6 +108,11 @@ public class JavaFileInfo {
         // Extract just the filename from the full path
         // Example: /home/user/Main.java → Main.java
         this.fileName = filePath.getFileName().toString();
+
+        // Initialize Day 2 lists
+        this.imports = new ArrayList<>();
+        this.classes = new ArrayList<>();
+        this.parsed = false;
     }
 
 
@@ -180,6 +214,121 @@ public class JavaFileInfo {
     }
 
 
+    // ==================== DAY 2: GETTERS & SETTERS ====================
+
+    /**
+     * Get the import statements
+     */
+    public List<String> getImports() {
+        return imports;
+    }
+
+    /**
+     * Set the import statements
+     */
+    public JavaFileInfo setImports(List<String> imports) {
+        this.imports = imports;
+        return this;
+    }
+
+    /**
+     * Add a single import
+     */
+    public JavaFileInfo addImport(String importStatement) {
+        this.imports.add(importStatement);
+        return this;
+    }
+
+    /**
+     * Get all classes in this file
+     */
+    public List<ClassInfo> getClasses() {
+        return classes;
+    }
+
+    /**
+     * Set the classes
+     */
+    public JavaFileInfo setClasses(List<ClassInfo> classes) {
+        this.classes = classes;
+        return this;
+    }
+
+    /**
+     * Add a class
+     */
+    public JavaFileInfo addClass(ClassInfo classInfo) {
+        this.classes.add(classInfo);
+        return this;
+    }
+
+    /**
+     * Check if file was successfully parsed
+     */
+    public boolean isParsed() {
+        return parsed;
+    }
+
+    /**
+     * Set parsed status
+     */
+    public JavaFileInfo setParsed(boolean parsed) {
+        this.parsed = parsed;
+        return this;
+    }
+
+    /**
+     * Get parse error message
+     */
+    public String getParseError() {
+        return parseError;
+    }
+
+    /**
+     * Set parse error message
+     */
+    public JavaFileInfo setParseError(String parseError) {
+        this.parseError = parseError;
+        return this;
+    }
+
+    /**
+     * Get the main/primary class (usually the public class matching filename)
+     */
+    public ClassInfo getMainClass() {
+        if (classes.isEmpty()) {
+            return null;
+        }
+        // Try to find public class matching filename
+        String expectedName = fileName.replace(".java", "");
+        for (ClassInfo cls : classes) {
+            if (cls.getName().equals(expectedName)) {
+                return cls;
+            }
+        }
+        // Return first class if no match
+        return classes.get(0);
+    }
+
+    /**
+     * Get total number of methods across all classes
+     */
+    public int getTotalMethodCount() {
+        return classes.stream()
+                .mapToInt(c -> c.getMethods().size())
+                .sum();
+    }
+
+    /**
+     * Get total number of fields across all classes
+     */
+    public int getTotalFieldCount() {
+        return classes.stream()
+                .mapToInt(c -> c.getFields().size())
+                .sum();
+    }
+
+
     // ==================== UTILITY METHODS ====================
 
     /**
@@ -188,20 +337,41 @@ public class JavaFileInfo {
      */
     @Override
     public String toString() {
-        return String.format(
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format(
                 "JavaFileInfo{\n" +
                         "  fileName='%s'\n" +
                         "  package='%s'\n" +
                         "  lines=%d\n" +
                         "  size=%d bytes\n" +
-                        "  path=%s\n" +
-                        "}",
+                        "  path=%s\n",
                 fileName,
                 packageName != null ? packageName : "(default package)",
                 lineCount,
                 fileSize,
                 filePath
-        );
+        ));
+
+        // Day 2: Add parsed structure info
+        if (parsed) {
+            sb.append(String.format(
+                    "  parsed=true\n" +
+                            "  imports=%d\n" +
+                            "  classes=%d\n" +
+                            "  totalMethods=%d\n" +
+                            "  totalFields=%d\n",
+                    imports.size(),
+                    classes.size(),
+                    getTotalMethodCount(),
+                    getTotalFieldCount()
+            ));
+        } else if (parseError != null) {
+            sb.append("  parsed=false\n");
+            sb.append("  error=").append(parseError).append("\n");
+        }
+
+        sb.append("}");
+        return sb.toString();
     }
 
     /**
