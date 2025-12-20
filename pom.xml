@@ -51,6 +51,25 @@
             <artifactId>javaparser-symbol-solver-core</artifactId>
             <version>${javaparser.version}</version>
         </dependency>
+
+        <!--
+            ╔═══════════════════════════════════════════════════════════╗
+            ║  JGIT - Git integration for Day 3!                        ║
+            ║                                                           ║
+            ║  What it does:                                            ║
+            ║  - Read Git repositories programmatically                 ║
+            ║  - Access commit history, branches, tags                  ║
+            ║  - Track file changes over time                           ║
+            ║  - Get author information                                 ║
+            ║                                                           ║
+            ║  Website: https://www.eclipse.org/jgit/                   ║
+            ╚═══════════════════════════════════════════════════════════╝
+        -->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>6.7.0.202309050840-r</version>
+        </dependency>
     </dependencies>
 
     <build>
